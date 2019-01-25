@@ -6,17 +6,16 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            list : [],
-            isEditing: false
+            list : []
         }
     }
-    
+
     increment = (function(n) {
         return function() {
           n += 1;
           return n;
         }
-      }(-1));
+    }(-1));
  
     addList=()=>{
         var data = document.getElementById('list').value;
@@ -30,9 +29,7 @@ class App extends React.Component {
                     }
                 );
         this.setState({list : lists})
-        console.log(this.state.list);
     }
-    
     delete = (arg) =>{
         var lists = [...this.state.list];
         var id = lists.findIndex(x => x.id===arg);
@@ -46,7 +43,7 @@ class App extends React.Component {
         var lists = [...this.state.list];
         var id = lists.findIndex(x => x.id===arg1);
         if(id > -1){
-            var a = lists.splice(id, 1,{'id':arg1,'text':arg2,'isEditing':true});
+            lists.splice(id, 1,{'id':arg1,'text':arg2,'isEditing':true});
             this.setState({list:lists})
         }
     }
@@ -57,7 +54,7 @@ class App extends React.Component {
         var id = lists.findIndex(x => x.id===arg);
         var newtext = document.getElementById('newtext').value;
         if(id > -1){
-            var a = lists.splice(id, 1,{'id':arg,'text':newtext,'isEditing':false});
+            lists.splice(id, 1,{'id':arg,'text':newtext,'isEditing':false});
             this.setState({list:lists})
         }
         
@@ -67,9 +64,8 @@ class App extends React.Component {
         this.setState({isEditing:false});
         var lists = [...this.state.list];
         var id = lists.findIndex(x => x.id===arg1);
-        var newtext = document.getElementById('newtext').value;
         if(id > -1){
-            var a = lists.splice(id, 1,{'id':arg1,'text':arg2,'isEditing':false});
+            lists.splice(id, 1,{'id':arg1,'text':arg2,'isEditing':false});
             this.setState({list:lists})
         }
     }
@@ -97,5 +93,4 @@ class App extends React.Component {
         );
     }
 }
-
 ReactDOM.render(<App />, document.getElementById('root'));
