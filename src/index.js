@@ -16,20 +16,35 @@ class App extends React.Component {
           return n;
         }
     }(-1));
- 
+
+    componentDidMount() {
+		const list1 = JSON.parse(localStorage.getItem('list'));
+        console.log(list1);
+        var lists = [...this.state.list];
+        lists = [...list1];
+        
+		if (list1 !== null) {
+            this.setState({ list : lists })
+            console.log('into');
+        }
+        console.log(lists); 
+    }
+    
+    
     addList=()=>{
         var data = document.getElementById('list').value;
         var lists = [...this.state.list];
         var i = this.increment(); 
-        lists.push(
-                    {
-                        'id': i,
-                        'text':data,
-                        'isEditing' :false
-                    }
-                );
+        var a = {
+            'id': i,
+            'text':data,
+            'isEditing' :false
+        };
+        lists.push(a);
         this.setState({list : lists})
+        localStorage.setItem('list', JSON.stringify(lists));
     }
+
     delete = (arg) =>{
         var lists = [...this.state.list];
         var id = lists.findIndex(x => x.id===arg);
@@ -37,6 +52,7 @@ class App extends React.Component {
             lists.splice(id, 1);
             this.setState({list:lists})
         }
+        localStorage.setItem('list', JSON.stringify(lists));
     }
 
     update = (arg1,arg2) => {
@@ -57,10 +73,10 @@ class App extends React.Component {
             lists.splice(id, 1,{'id':arg,'text':newtext,'isEditing':false});
             this.setState({list:lists})
         }
-        
+        localStorage.setItem('list', JSON.stringify(lists)); 
     }
 
-    calcle = (arg1,arg2) => {
+    cancle = (arg1,arg2) => {
         this.setState({isEditing:false});
         var lists = [...this.state.list];
         var id = lists.findIndex(x => x.id===arg1);
@@ -73,6 +89,7 @@ class App extends React.Component {
     render() {
         return (
             <div>
+               
                 <h1 className='title'>List:</h1>
                 <ul><li>
                 <div className='add'>
@@ -80,12 +97,18 @@ class App extends React.Component {
                 <button type="submit" onClick={this.addList}>Add</button>
                 </div>
                 </li></ul>
-                <ul>
-                    {this.state.list.map(p => (
-                    <li key={p.id}>
-                            {p.isEditing ? 
-                            <div className='data'><input className='first' type='text' id='newtext' placeholder={p.text}/>  <button className='edit' onClick={() => this.ok(p.id)}> Ok </button> <button className='del' onClick={() => this.calcle(p.id,p.text)}> Cancle </button> </div>  : 
-                            <div className='data'><p className='first'>{p.text}</p> <button className='edit' onClick={() => this.update(p.id,p.text)}> Edit </button>  <button className='del' onClick={()=>this.delete(p.id)} >Delete</button></div>}
+                <ul>{this.state.list.map(p => (
+                    <li /*key={p.id}*/>
+                        {   p.isEditing ? 
+                            <div className='data'><input className='first' type='text' id='newtext' placeholder={p.text}/>
+                            <button className='edit' onClick={() => this.ok(p.id)}> Ok </button> 
+                            <button className='del' onClick={() => this.cancle(p.id,p.text)}> Cancle </button> 
+                            </div>  :   <div className='data'>
+                            <p className='first'>{p.text}</p> 
+                            <button className='edit' onClick={() => this.update(p.id,p.text)}> Edit </button>  
+                            <button className='del' onClick={()=>this.delete(p.id)} >Delete</button>
+                            </div>
+                        }
                     </li> 
                     ))}
                 </ul>
